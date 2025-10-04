@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: spring-mybatis-sample
+  datasource:
+    url: jdbc:mysql://localhost:3306/sample_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+    username: sample_user
+    password: sample_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.demo.user
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.example.demo: DEBUG
