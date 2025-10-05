@@ -1,0 +1,20 @@
+# Gradle & build artifacts
+.gradle/
+build/
+app/build/
+
+# IDE & OS metadata
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+.DS_Store
+
+# Logs & temp files
+*.log
+*.tmp
+*.swp
+
+# Node/other caches
+node_modules/

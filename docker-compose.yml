@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sample-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sample_db
+      MYSQL_USER: sample_user
+      MYSQL_PASSWORD: sample_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  api1:
+    build:
+      context: .
+      dockerfile: Dockerfile.api1
+    environment:
+      SPRING_MAIN_APPLICATION_CLASS: com.example.demo.SpringMybatisSampleApplication
+      SPRING_PROFILES_ACTIVE: api1
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sample_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: sample_user
+      SPRING_DATASOURCE_PASSWORD: sample_password
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  api2:
+    build:
+      context: .
+      dockerfile: Dockerfile.api2
+    environment:
+      SPRING_MAIN_APPLICATION_CLASS: com.example.demo.api2.Api2Application
+      SPRING_PROFILES_ACTIVE: api2
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sample_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: sample_user
+      SPRING_DATASOURCE_PASSWORD: sample_password
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+
+  batch:
+    build:
+      context: .
+      dockerfile: Dockerfile.batch
+    environment:
+      SPRING_MAIN_APPLICATION_CLASS: com.example.demo.batch.BatchApplication
+      SPRING_PROFILES_ACTIVE: batch
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sample_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: sample_user
+      SPRING_DATASOURCE_PASSWORD: sample_password
+      SPRING_BATCH_JOB_NAME: userImportJob
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
