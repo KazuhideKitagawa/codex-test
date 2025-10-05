@@ -70,6 +70,37 @@ gradle wrapper
 
 アプリケーションが起動すると `http://localhost:8080/api/users` にユーザー API が公開されます。
 
+## Docker でのビルドと起動
+
+Docker を利用する場合は、リポジトリ直下に用意したマルチステージビルド用の Dockerfile 群と `docker-compose.yml` を利用できます。
+
+### コンテナイメージのビルド
+
+```bash
+docker compose build
+```
+
+### コンテナの起動
+
+```bash
+docker compose up -d
+```
+
+起動後は以下のエンドポイントが公開されます。
+
+- API1: `http://localhost:8080`
+- API2: `http://localhost:8081`
+
+バッチコンテナは `SPRING_BATCH_JOB_NAME` で指定した Spring Batch ジョブ（デフォルトは `userImportJob`）を実行して終了します。
+
+MySQL のデータ永続化には `mysql-data` ボリュームを利用しています。環境変数（DB 接続先や API2 のポート、Spring Profile など）は `docker-compose.yml` の `environment` セクションを調整してください。
+
+### 停止と後片付け
+
+```bash
+docker compose down -v
+```
+
 ## サンプル API
 
 | メソッド | パス | 説明 |
